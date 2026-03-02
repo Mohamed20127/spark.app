@@ -1,32 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPARK Admin</title>
+
+<style>
+body{
+background:#0f0f0f;
+color:white;
+font-family:Arial;
+padding:20px
+}
+
+h2{
+color:#ff3b3b;
+margin-bottom:20px
+}
+
+.order{
+background:#1a1a1a;
+padding:15px;
+border-radius:15px;
+margin-bottom:15px;
+animation:fadeIn .4s ease;
+}
+
+.order h4{
+color:#ff7a00;
+margin-bottom:10px
+}
+
+.order-item{
+font-size:14px;
+margin-bottom:5px
+}
+
+.status{
+margin-top:10px;
+padding:6px 10px;
+border-radius:8px;
+font-size:12px;
+display:inline-block
+}
+
+.pending{background:#ff9800}
+.done{background:#4caf50}
+
+button{
+margin-top:10px;
+padding:8px 12px;
+border:none;
+border-radius:10px;
+background:#ff3b3b;
+color:white;
+cursor:pointer
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px)}
+to{opacity:1;transform:translateY(0)}
+}
+</style>
 </head>
+
 <body>
 
-<h2>الطلبات</h2>
-<div id="orders"></div>
+<h2>🔥 SPARK Admin Dashboard</h2>
+
+<div id="ordersContainer"></div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, updateDoc, doc } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = { YOUR_CONFIG };
+const firebaseConfig = {
+apiKey: "AIzaSyBZlojywBSfI0dTuOGuzHqxvEhbHSAcIIM",
+  authDomain: "spark-f2a23.firebaseapp.com",
+  projectId: "spark-f2a23",
+  storageBucket: "spark-f2a23.firebasestorage.app",
+  messagingSenderId: "124111743683",
+  appId: "1:124111743683:web:6eb0ddbb6aceb7b58b5076",
+  measurementId: "G-4XGMDRH10B"
+};
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const querySnapshot = await getDocs(collection(db, "orders"));
+const container = document.getElementById("ordersContainer");
 
-querySnapshot.forEach(doc => {
-document.getElementById("orders").innerHTML +=
-`<div>
-<h4>طلب جديد</h4>
-<p>${JSON.stringify(doc.data())}</p>
-<hr>
-</div>`;
+onSnapshot(collection(db,"orders"), (snapshot)=>{
+container.innerHTML="";
+snapshot.forEach((docSnap)=>{
+const data = docSnap.data();
+
+let itemsHTML="";
+data.items.forEach(item=>{
+itemsHTML += <div class="order-item">${item.name} - ${item.price} جنيه</div>;
 });
+
+container.innerHTML += `
+<div class="order">
+<h4>طلب جديد</h4>
+${itemsHTML}
+<p>الإجمالي: ${data.total} جنيه</p>
+<span class="status pending">Pending</span>
+<button onclick="markDone('${docSnap.id}')">تم التنفيذ</button>
+</div>
+`;
+});
+});
+
+window.markDone = async function(id){
+const orderRef = doc(db,"orders",id);
+await updateDoc(orderRef,{
+status:"done"
+});
+alert("تم تحديث الحالة");
+}
 
 </script>
 
