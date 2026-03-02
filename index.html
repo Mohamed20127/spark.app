@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPARK</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff3b3b">
+
+</head>
+
+<body class="dark">
+
+<!-- Splash -->
+<div id="splash">
+<h1>SPARK</h1>
+<p>Fire Up Your Hunger</p>
+</div>
+
+<!-- App -->
+<div class="app hidden">
+
+<header>
+<h2>SPARK</h2>
+<button id="themeToggle">🌙</button>
+</header>
+
+<main>
+
+<!-- Home -->
+<section id="homeView" class="view active">
+
+<div class="hero">
+<h3>🔥 Fire Up Your Hunger</h3>
+<p>اطلب أكلك المفضل بسرعة</p>
+</div>
+
+<h3 style="margin-top:20px;">🔥 منتجاتنا</h3>
+<div id="productsContainer"></div>
+
+</section>
+
+<!-- Categories -->
+<section id="categoriesView" class="view">
+<h3>📂 الأقسام</h3>
+<div class="grid">
+<div class="card">🍕 بيتزا</div>
+<div class="card">🥞 كريب</div>
+<div class="card">🧀 كالزوني</div>
+<div class="card">🌯 رول</div>
+<div class="card">🍟 بطاطس</div>
+<div class="card">➕ إضافات</div>
+<div class="card">🥤 مشروبات</div>
+</div>
+</section>
+
+<!-- Cart -->
+<section id="cartView" class="view">
+<h3>🛒 السلة</h3>
+<div id="cartItems"></div>
+<h4 id="totalPrice">الإجمالي: 0 جنيه</h4>
+<button id="checkoutBtn">تأكيد الطلب</button>
+</section>
+
+<!-- Orders -->
+<section id="ordersView" class="view">
+<h3>📦 طلباتي</h3>
+<p>بعد تأكيد الطلب هتظهر رسالة نجاح هنا</p>
+</section>
+
+</main>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+<button data-view="homeView" class="active">🏠</button>
+<button data-view="categoriesView">📂</button>
+
+<button data-view="cartView" id="cartNav">
+🛒
+<span id="cartCount">0</span>
+</button>
+
+<button data-view="ordersView">📦</button>
+</nav>
+
+</div>
+
+<!-- Product Modal -->
+<div id="productModal" class="modal hidden">
+<div class="modal-content">
+<span id="closeModal">✖️</span>
+<div class="modal-img"></div>
+<h3 id="modalName"></h3>
+<p id="modalPrice"></p>
+<button id="modalAdd">إضافة للسلة</button>
+</div>
+</div>
+
+<script src="app.js"></script>
+
+<!-- 🔥 FIREBASE STARTS HERE -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+ const firebaseConfig = {
+    apiKey: "AIzaSyBZlojywBSfI0dTuOGuzHqxvEhbHSAcIIM",
+    authDomain: "spark-f2a23.firebaseapp.com",
+    projectId: "spark-f2a23",
+    storageBucket: "spark-f2a23.firebasestorage.app",
+    messagingSenderId: "124111743683",
+    appId: "1:124111743683:web:6eb0ddbb6aceb7b58b5076",
+    measurementId: "G-4XGMDRH10B"
+  };
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.sendOrderToFirebase = async function(orderData){
+try{
+await addDoc(collection(db,"orders"), orderData);
+alert("🔥 تم إرسال الطلب بنجاح");
+}catch(error){
+console.error(error);
+alert("في مشكلة حصلت");
+}
+};
+
+</script>
+<!-- 🔥 FIREBASE ENDS HERE -->
+
+<!-- Service Worker -->
+<script>
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+</body>
+</html>

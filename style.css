@@ -1,0 +1,115 @@
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,Arial}
+body{transition:.3s;overflow-x:hidden}
+body.dark{background:#0f0f0f;color:#fff}
+body.light{background:#f5efe6;color:#222}
+.hidden{display:none}
+
+.app{max-width:430px;margin:auto;min-height:100vh;display:flex;flex-direction:column}
+
+header{display:flex;justify-content:space-between;align-items:center;padding:20px}
+header h2{color:#ff3b3b}
+
+.hero{
+margin:20px;
+padding:20px;
+border-radius:20px;
+background:linear-gradient(135deg,#ff3b3b,#ff7a00);
+color:white
+}
+
+.view{display:none;padding:0 20px 100px}
+.view.active{display:block}
+
+#productsContainer{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+margin-top:15px
+}
+
+.product{
+background:#1a1a1a;
+border-radius:15px;
+padding:15px;
+cursor:pointer;
+transition:.3s
+}
+body.light .product{background:white}
+.product:hover{transform:translateY(-5px)}
+
+.price{color:#ff7a00;font-weight:bold}
+
+.addBtn{
+margin-top:10px;
+width:100%;
+padding:8px;
+border:none;
+border-radius:10px;
+background:linear-gradient(135deg,#ff3b3b,#ff7a00);
+color:white;
+cursor:pointer
+}
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+width:100%;
+max-width:430px;
+display:flex;
+justify-content:space-around;
+padding:15px;
+background:#111
+}
+body.light .bottom-nav{background:white}
+
+.bottom-nav button{
+background:none;border:none;font-size:18px;color:#777
+}
+.bottom-nav .active{color:#ff3b3b}
+
+#cartCount{
+background:red;
+color:white;
+border-radius:50%;
+font-size:12px;
+padding:2px 6px;
+margin-left:5px
+}
+
+.modal{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,.6);
+display:none;
+justify-content:center;
+align-items:center
+}
+.modal.active{display:flex}
+
+.modal-content{
+background:#1a1a1a;
+padding:20px;
+border-radius:15px;
+width:90%;
+max-width:350px
+}
+body.light .modal-content{background:white}
+
+#cartItems div{
+background:#1a1a1a;
+padding:10px;
+margin-bottom:10px;
+border-radius:10px
+}
+body.light #cartItems div{background:white}
+
+#checkoutBtn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+background:linear-gradient(135deg,#ff3b3b,#ff7a00);
+color:white;
+margin-top:15px
+}
