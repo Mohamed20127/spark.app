@@ -72,12 +72,21 @@ to{opacity:1;transform:translateY(0)}
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, updateDoc, doc } 
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import { 
+  getFirestore, 
+  collection, 
+  onSnapshot, 
+  updateDoc, 
+  doc, 
+  query, 
+  orderBy 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyBZlojywBSfI0dTuOGuzHqxvEhbHSAcIIM",
+  apiKey: "AIzaSyBZlojywBSfI0dTuOGuzHqxvEhbHSAcIIM",
     authDomain: "spark-f2a23.firebaseapp.com",
     projectId: "spark-f2a23",
     storageBucket: "spark-f2a23.firebasestorage.app",
@@ -85,43 +94,41 @@ apiKey: "AIzaSyBZlojywBSfI0dTuOGuzHqxvEhbHSAcIIM",
     appId: "1:124111743683:web:6eb0ddbb6aceb7b58b5076",
     measurementId: "G-4XGMDRH10B"
   };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const container = document.getElementById("ordersContainer");
 
-onSnapshot(collection(db,"orders"), (snapshot)=>{
-container.innerHTML="";
-snapshot.forEach((docSnap)=>{
-const data = docSnap.data();
+const q = query(collection(db,"orders"), orderBy("date","desc"));
 
-let itemsHTML="";
-data.items.forEach(item=>{
-itemsHTML += <div class="order-item">${item.name} - ${item.price} جنيه</div>;
-});
+onSnapshot(q, (snapshot)=>{
+  container.innerHTML="";
 
-container.innerHTML += `
-<div class="order">
-<h4>طلب جديد</h4>
-${itemsHTML}
-<p>الإجمالي: ${data.total} جنيه</p>
-<span class="status pending">Pending</span>
-<button onclick="markDone('${docSnap.id}')">تم التنفيذ</button>
-</div>
-`;
-});
+  snapshot.forEach((docSnap)=>{
+    const data = docSnap.data();
+
+    let itemsHTML="";
+    data.items.forEach(item=>{
+      itemsHTML += `
+      <div>${item.name} - ${item.price} جنيه</div>
+      `;
+    });
+
+    container.innerHTML += `
+      <div class="order">
+        <h4>طلب جديد</h4>
+        ${itemsHTML}
+        <p>الإجمالي: ${data.total} جنيه</p>
+        <button onclick="markDone('${docSnap.id}')">تم التنفيذ</button>
+      </div>
+    `;
+  });
 });
 
 window.markDone = async function(id){
-const orderRef = doc(db,"orders",id);
-await updateDoc(orderRef,{
-status:"done"
-});
-alert("تم تحديث الحالة");
+  const orderRef = doc(db,"orders",id);
+  await updateDoc(orderRef,{status:"done"});
+  alert("تم التحديث");
 }
 
 </script>
-
-</body>
-</html>
